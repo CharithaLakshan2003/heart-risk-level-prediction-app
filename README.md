@@ -1,4 +1,5 @@
 # Heart Risk Level Prediction AI App
+![alt text](heart_risk_logo_1782067086619.png)
 
 An AI-powered cardiovascular risk assessment web application built with **React + Vite** (frontend) and **Flask** (backend), using a pre-trained machine learning regression model.
 
