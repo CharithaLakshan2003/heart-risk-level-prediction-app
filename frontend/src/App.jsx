@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PatientForm from './components/PatientForm'
 import ResultCard from './components/ResultCard'
 import './index.css'
+import logo from './assets/logo.png'
 
 export default function App() {
   const [result, setResult] = useState(null)
@@ -20,8 +21,8 @@ export default function App() {
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl
-            bg-gradient-to-br from-violet-600 to-fuchsia-600 shadow-lg shadow-violet-500/40 mb-4">
-            <span className="text-3xl">❤️</span>
+            bg-gradient-to-br from-violet-600 to-fuchsia-600 shadow-lg shadow-violet-500/40 mb-4 overflow-hidden">
+            <img src={logo} alt="Logo" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gradient mb-2">
             Heart Risk Predictor
