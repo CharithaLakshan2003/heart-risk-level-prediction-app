@@ -6,6 +6,7 @@ import logo from './assets/logo.png'
 
 export default function App() {
   const [result, setResult] = useState(null)
+  const [formData, setFormData] = useState(null)
   const [loading, setLoading] = useState(false)
 
   return (
@@ -43,7 +44,7 @@ export default function App() {
                 </h2>
                 <div className="h-1 flex-1 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-600" />
               </div>
-              <PatientForm onResult={setResult} onLoading={setLoading} />
+              <PatientForm onResult={setResult} onFormData={setFormData} onLoading={setLoading} />
             </>
           ) : (
             <>
@@ -54,7 +55,7 @@ export default function App() {
                 </h2>
                 <div className="h-1 flex-1 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-600" />
               </div>
-              <ResultCard result={result} onReset={() => setResult(null)} />
+              <ResultCard result={result} formData={formData} onReset={() => { setResult(null); setFormData(null) }} />
             </>
           )}
         </div>

@@ -1,16 +1,16 @@
-export default function ResultCard({ result, onReset }) {
-  const risk = result.risk
+export default function ResultCard({ result, formData, onReset }) {
+  const riskPercent = Math.round(result.risk * 100)  // convert 0.0–1.0 → 0–100 integer
   const name = result.name
 
   // Determine risk category
   let category, color, bgColor, emoji, description
-  if (risk < 0.40) {
+  if (riskPercent < 10) {
     category = 'Low Risk'
     color = 'text-emerald-400'
     bgColor = 'from-emerald-500/20 to-teal-500/10'
     emoji = ''
     description = 'Your heart risk level is low. Maintain your healthy lifestyle!'
-  } else if (risk < 0.65) {
+  } else if (riskPercent <= 20) {
     category = 'Moderate Risk'
     color = 'text-amber-400'
     bgColor = 'from-amber-500/20 to-orange-500/10'
@@ -24,13 +24,12 @@ export default function ResultCard({ result, onReset }) {
     description = 'High risk detected. Please consult a cardiologist immediately.'
   }
 
-  // Gauge: cap at 40% for visual (most models output 0–40% range)
-  const gaugePercent = Math.min((risk / 40) * 100, 100)
+  // Gauge: use percentage directly (0–100)
   const circumference = 2 * Math.PI * 60
-  const strokeDashoffset = circumference - (gaugePercent / 100) * circumference
+  const strokeDashoffset = circumference - (riskPercent / 100) * circumference
 
   const gaugeColor =
-    risk < 0.40 ? '#34d399' : risk < 0.65 ? '#fbbf24' : '#f87171'
+    riskPercent < 10 ? '#34d399' : riskPercent <= 20 ? '#fbbf24' : '#f87171'
 
   return (
     <div className="animate-slide-up" id="result-card">
@@ -71,7 +70,7 @@ export default function ResultCard({ result, onReset }) {
           </svg>
           {/* Center text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-4xl font-extrabold ${color}`}>{risk}%</span>
+            <span className={`text-4xl font-extrabold ${color}`}>{riskPercent}%</span>
             <span className="text-xs text-slate-400 font-medium mt-1">Risk Level</span>
           </div>
         </div>
@@ -86,9 +85,9 @@ export default function ResultCard({ result, onReset }) {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-8">
         {[
-          { label: 'Risk Score', value: `${risk}%` },
+          { label: 'Risk Score', value: `${riskPercent}%` },
           { label: 'Category', value: category.split(' ')[0] },
-          { label: 'Status', value: risk < 10 ? 'Good' : risk < 20 ? 'Caution' : 'Critical' },
+          { label: 'Status', value: riskPercent < 10 ? 'Good' : riskPercent <= 20 ? 'Caution' : 'Critical' },
         ].map(stat => (
           <div key={stat.label} className="glass rounded-xl p-3 text-center">
             <p className={`text-lg font-bold ${color}`}>{stat.value}</p>
@@ -96,6 +95,35 @@ export default function ResultCard({ result, onReset }) {
           </div>
         ))}
       </div>
+
+      {/* Patient Input Data */}
+      {formData && (
+        <div className="glass rounded-2xl p-5 mb-6">
+          <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+            Patient Input Data
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: 'Gender', value: formData.gender === '1' ? 'Male' : 'Female', icon: '' },
+              { label: 'Age', value: `${formData.age} yrs`, icon: '' },
+              { label: 'Total Chol.', value: `${formData.tc} mg/dL`, icon: '' },
+              { label: 'HDL Chol.', value: `${formData.hdl} mg/dL`, icon: '' },
+              { label: 'Sys. BP', value: `${formData.sbp} mm Hg`, icon: '' },
+              { label: 'Smoker', value: formData.smoke === '1' ? 'Yes' : 'No', icon: '' },
+              { label: 'BP Medication', value: formData.bpm === '1' ? 'Yes' : 'No', icon: '' },
+              { label: 'Diabetes', value: formData.diab === '1' ? 'Yes' : 'No', icon: '' },
+            ].map(item => (
+              <div key={item.label} className="flex items-center gap-3 bg-white/5 rounded-xl px-3 py-2.5">
+                <span className="text-lg">{item.icon}</span>
+                <div>
+                  <p className="text-xs text-slate-400 leading-none mb-0.5">{item.label}</p>
+                  <p className="text-sm font-semibold text-white">{item.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Reset Button */}
       <button

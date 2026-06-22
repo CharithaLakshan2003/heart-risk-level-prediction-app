@@ -79,7 +79,7 @@ const fields = [
   },
 ]
 
-export default function PatientForm({ onResult, onLoading }) {
+export default function PatientForm({ onResult, onFormData, onLoading }) {
   const [formData, setFormData] = useState({
     name: '', gender: '', age: '', tc: '', hdl: '',
     sbp: '', smoke: '', bpm: '', diab: '',
@@ -122,6 +122,7 @@ export default function PatientForm({ onResult, onLoading }) {
       })
       const data = await response.json()
       if (data.error) throw new Error(data.error)
+      onFormData(formData)
       onResult(data)
     } catch (err) {
       alert('Error: ' + err.message + '\nMake sure the Flask backend is running on port 5000.')
